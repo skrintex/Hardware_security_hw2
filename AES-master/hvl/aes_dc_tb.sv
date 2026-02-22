@@ -33,6 +33,16 @@ bit [127:0] pt_gold;
 
 initial r = $value$plusargs("NUM_VECS=%d", NUM_VECS);
 
+task automatic print_ascii16(input logic [127:0] x);
+  $write("\"");
+  for (int b = 15; b >= 0; b--) begin  // try 15->0; if reversed, swap to 0->15
+    byte c = x[b*8 +: 8];
+    if (c >= 32 && c <= 126) $write("%c", c);
+    else $write(".");
+  end
+  $write("\"\n");
+endtask
+
 // Reset the DUT and assign a random key
 initial begin: setup
 
@@ -57,8 +67,9 @@ initial begin: producer
 
     for (int i = 0; i < NUM_VECS; ++i) begin
         load = 1'b1;
-        for (int i = 0; i < 4; ++i)
-            ct[32*i+:32] = $urandom();
+        // for (int i = 0; i < 4; ++i)
+        //     ct[32*i+:32] = $urandom();
+        ct = 128'h5d5cb7bd1ce3dea8d948389972dd3d17;
         vecs.push_front(ct);
 
         @(posedge clk) #1;
@@ -81,7 +92,16 @@ initial begin: consumer
         @(posedge clk) #1;
 
         if (valid) begin
-            aes_decrypt_dpi(Nk, pt_gold, vecs.pop_back(), key);
+            bit [127:0] ct_ref;
+
+            ct_ref = vecs.pop_back();
+            aes_decrypt_dpi(Nk, pt_gold, ct_ref, key);
+
+            if (count < 5) begin
+                $display("DECRYPTED PT (hex) = %032h", pt);
+                $write("DECRYPTED PT (ascii) = "); print_ascii16(pt);
+            end
+
             assert(pt == pt_gold);
             count += 1;
         end

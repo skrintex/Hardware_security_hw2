@@ -14,7 +14,7 @@ bit dc_done8 [NUM_BLOCKS];
 
 bit done;
 
-initial wait(done) $finish();
+// initial wait(done) $finish();
 
 always_comb
     done = ec_done4.and() & ec_done6.and() & ec_done8.and()
@@ -33,5 +33,11 @@ generate
         aes_dc_tb #(8) dc8 (dc_done8[i]);
     end
 endgenerate
+
+initial begin
+    wait(done);
+    $display("ALL AES TESTS PASSED");
+    $finish;
+end
 
 endmodule: aes_tb

@@ -11,7 +11,8 @@ module aes_key_expand
     parameter Nr=Nk+6
 ) (
     input logic [32*Nk-1:0] key,
-    output logic [127:0] k_sch [0:Nr]
+    output logic [127:0] k_sch [0:Nr],
+    output logic [7:0]   k_chk [0:Nr]
 );
 
 logic [31:0] temp [4*(Nr+1)];
@@ -38,10 +39,19 @@ generate
 endgenerate
 
 generate
-    for (genvar i = 0; i <= Nr; ++i) begin
-        always_comb
-            k_sch[i] = {temp[4*i+3], temp[4*i+2], temp[4*i+1], temp[4*i+0]};
+  for (genvar i = 0; i <= Nr; ++i) begin
+    always_comb begin
+        k_sch[i] = {temp[4*i+3], temp[4*i+2], temp[4*i+1], temp[4*i+0]};
+        k_chk[i] = xor_bytes_128(k_sch[i]);
     end
+  end
 endgenerate
+
+function automatic logic [7:0] xor_bytes_128(input logic [127:0] x);
+    logic [7:0] s;
+    s = 8'h00;
+    for (int j = 0; j < 16; j++) s ^= x[j*8 +: 8];
+    return s;
+endfunction
 
 endmodule: aes_key_expand

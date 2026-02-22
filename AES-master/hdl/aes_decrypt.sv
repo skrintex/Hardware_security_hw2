@@ -23,8 +23,14 @@ module aes_decrypt
 );
 
 logic [127:0] k_sch [0:Nr];
+logic [7:0]   k_chk_dummy [0:Nr];
 
-aes_key_expand #(Nk) key_expand(.*);
+aes_key_expand #(Nk) key_expand(
+  .key   (key),
+  .k_sch (k_sch),
+  .k_chk (k_chk_dummy)
+);
+
 aes_inv_cipher #(Nk) inv_cipher(.*);
 
 endmodule: aes_decrypt

@@ -33,6 +33,16 @@ bit [127:0] ct_gold;
 
 initial r = $value$plusargs("NUM_VECS=%d", NUM_VECS);
 
+task automatic print_ascii16(input logic [127:0] x);
+  $write("\"");
+  for (int b = 15; b >= 0; b--) begin
+    byte c = x[b*8 +: 8];
+    if (c >= 32 && c <= 126) $write("%c", c);
+    else $write(".");
+  end
+  $write("\"\n");
+endtask
+
 // Reset the DUT and assign a random key
 initial begin: setup
 
@@ -57,8 +67,9 @@ initial begin: producer
 
     for (int i = 0; i < NUM_VECS; ++i) begin
         load = 1'b1;
-        for (int i = 0; i < 4; ++i)
-            pt[32*i+:32] = $urandom();
+        // for (int i = 0; i < 4; ++i)
+        //     pt[32*i+:32] = $urandom();
+        pt = "    Hello World!";
         vecs.push_front(pt);
 
         @(posedge clk) #1;
@@ -81,7 +92,17 @@ initial begin: consumer
         @(posedge clk) #1;
 
         if (valid) begin
-            aes_encrypt_dpi(Nk, ct_gold, vecs.pop_back(), key);
+            bit [127:0] pt_ref;
+
+            pt_ref = vecs.pop_back();
+            aes_encrypt_dpi(Nk, ct_gold, pt_ref, key);
+
+            if (count < 5) begin
+                $display("PT(hex)=%032h CT(hex)=%032h", pt_ref, ct);
+                $write("PT(ascii)=");
+                print_ascii16(pt_ref);
+            end
+
             assert(ct == ct_gold);
             count += 1;
         end
