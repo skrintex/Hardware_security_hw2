@@ -67,9 +67,9 @@ initial begin: producer
 
     for (int i = 0; i < NUM_VECS; ++i) begin
         load = 1'b1;
-        // for (int i = 0; i < 4; ++i)
-        //     ct[32*i+:32] = $urandom();
-        ct = 128'h5d5cb7bd1ce3dea8d948389972dd3d17;
+        for (int i = 0; i < 4; ++i)
+            ct[32*i+:32] = $urandom();
+        // ct = 128'h5d5cb7bd1ce3dea8d948389972dd3d17;
         vecs.push_front(ct);
 
         @(posedge clk) #1;
@@ -97,10 +97,10 @@ initial begin: consumer
             ct_ref = vecs.pop_back();
             aes_decrypt_dpi(Nk, pt_gold, ct_ref, key);
 
-            if (count < 5) begin
-                $display("DECRYPTED PT (hex) = %032h", pt);
-                $write("DECRYPTED PT (ascii) = "); print_ascii16(pt);
-            end
+            // if (count < 5) begin
+            //     $display("DECRYPTED PT (hex) = %032h", pt);
+            //     $write("DECRYPTED PT (ascii) = "); print_ascii16(pt);
+            // end
 
             assert(pt == pt_gold);
             count += 1;
