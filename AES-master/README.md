@@ -15,6 +15,10 @@ against OpenSSL AES-ECB output (no padding).
 ---
 
 ## Usage
+Run by:
+```bash
+make vcs-sim
+```
 
 After running your RTL simulation, copy one of the printed values:
 
