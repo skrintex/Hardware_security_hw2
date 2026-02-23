@@ -38,7 +38,9 @@ FORCE:
 
 VLOG_INC_FILES := include/flops.svh include/aes.svh
 
-VLOG_HDL_FILES := \
+VLOG_HDL_FILES := \	
+	hdl/aes128.sv \
+	hdl/noise_gen.sv \
     hdl/aes_key_expand.sv \
     hdl/aes_cipher.sv \
     hdl/aes_inv_cipher.sv \
