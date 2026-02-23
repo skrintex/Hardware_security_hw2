@@ -19,13 +19,16 @@ against OpenSSL AES-ECB output (no padding).
 After running your RTL simulation, copy one of the printed values:
 
 For example:
+```bash
 key=13e2293b702e2669fd339cfee2035d3d97b2ad20f1cb6405c500097aecc6a5ce
 pt=d82bca223132bca48bf11f0807436815
 ct=3e06a879484c419c8d22cab8a150a887
+```
 
 Then run:
-
+```bash
 ./aes_check.sh "$key" "$pt" "$ct"
+```
 
 The script prints:
 
