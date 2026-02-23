@@ -39,16 +39,6 @@ If both lines match, the RTL AES implementation matches OpenSSL.
 
 ---
 
-## Supported Key Sizes
-
-The script automatically detects AES mode based on key length:
-
-- 32 hex characters  → AES-128
-- 48 hex characters  → AES-192
-- 64 hex characters  → AES-256
-
----
-
 ## Requirements
 
 - openssl
