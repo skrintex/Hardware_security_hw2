@@ -62,8 +62,27 @@ The script automatically detects AES mode based on key length:
 Expected: 3e06a879484c419c8d22cab8a150a887
 Got:      3e06a879484c419c8d22cab8a150a887
 
+## Key Schedule Integrity Protection
 
-Reference:
+To enhance robustness against fault injection attacks, this AES core incorporates a lightweight integrity-check mechanism into the key schedule.
+
+For each round key, an 8-bit XOR checksum is computed during key expansion and stored alongside the corresponding round key. During encryption, the checksum is recomputed and verified before the round key is consumed by the cipher pipeline. If a mismatch is detected, the valid signal is deasserted, preventing faulty ciphertext from propagating to the output.
+
+This approach introduces spatial redundancy for key material integrity with minimal hardware overhead. It is particularly effective against transient or injected faults that target round keys, which are commonly exploited in Differential Fault Analysis (DFA) attacks. By detecting key corruption early in the pipeline, the design mitigates the risk of leaking secret information through fault-induced faulty outputs.
+
+## Referencesa
+# Fault Injection and Differential Fault Analysis
+* `On the Importance of Checking Cryptographic Protocols for Faults (Boneh, DeMillo, Lipton, 1997) https://crypto.stanford.edu/~dabo/pubs/papers/faults.pdf`_
+* `Differential Fault Analysis on AES (Dusart, Letourneux, Vivolo, 2002) https://www.iacr.org/archive/ches2003/27790239/27790239.pdf`_
+* `Fault Analysis in Cryptography (Barenghi et al., 2012) https://eprint.iacr.org/2012/553.pdf`_
+
+# Fault Detection Countermeasures
+* `Concurrent Error Detection for AES Hardware Implementations (Bertoni et al., 2003)https://www.iacr.org/archive/ches2003/27790227/27790227.pdf`_
+* `Hardware Countermeasures Against Fault Attacks (Barenghi et al., 2010)https://eprint.iacr.org/2010/520.pdf`_
+
+
+
+Origin Reference:
 
 * `Advanced Encryption Standard <http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf>`_
 * `The Advanced Encryption Standard Algorithm Validation Suite <http://csrc.nist.gov/groups/STM/cavp/documents/aes/AESAVS.pdf>`_
