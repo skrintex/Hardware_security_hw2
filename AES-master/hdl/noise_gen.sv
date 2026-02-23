@@ -5,7 +5,10 @@ module noise_gen (
     input  logic        en,
     output logic [127:0] noise_state
 );
-    logic fb;
+    logic fb_next;
+    always_comb begin
++        fb_next = rnd32[0] ^ rnd32[5] ^ rnd32[9] ^ rnd32[31];
++    end
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             noise_state <= 128'h1;
