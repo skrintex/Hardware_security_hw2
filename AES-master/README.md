@@ -70,7 +70,7 @@ For each round key, an 8-bit XOR checksum is computed during key expansion and s
 
 This approach introduces spatial redundancy for key material integrity with minimal hardware overhead. It is particularly effective against transient or injected faults that target round keys, which are commonly exploited in Differential Fault Analysis (DFA) attacks. By detecting key corruption early in the pipeline, the design mitigates the risk of leaking secret information through fault-induced faulty outputs.
 
-## Referencesa
+## References
 # Fault Injection and Differential Fault Analysis
 * `On the Importance of Checking Cryptographic Protocols for Faults (Boneh, DeMillo, Lipton, 1997) https://crypto.stanford.edu/~dabo/pubs/papers/faults.pdf`_
 * `Differential Fault Analysis on AES (Dusart, Letourneux, Vivolo, 2002) https://www.iacr.org/archive/ches2003/27790239/27790239.pdf`_
